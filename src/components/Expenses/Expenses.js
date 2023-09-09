@@ -1,19 +1,25 @@
 import { useState } from 'react';
 
-import ExpenseItem from './ExpenseItem';
 import Card from '../UI/Card';
 import ExpensesFilter from '../ExpensesFilter/ExpensesFilter';
 
 import './Expenses.css';
+import ExpensesList from './ExpensesList';
+import ExpensesChart from './ExpensesChart';
 
 function Expenses(props) {
 
     const [chosenYear, setChosenYear] = useState('2020');
 
     const yearChangeHandler = (year) => {
-        console.log('year = ' + year);
         setChosenYear(year);
     }
+
+    const filteredItems = props.items.filter((item) => {
+        return item.date.getFullYear().toString() === chosenYear;
+    });
+
+    
 
     return(
         <div>
@@ -26,7 +32,13 @@ function Expenses(props) {
                 */
             }
             <ExpensesFilter selectedYear={chosenYear} onYearChange = {yearChangeHandler} />
-            <ExpenseItem
+            
+            { /* Id needed so react knows where to add new element, instead of adding element to the end and updating all items */ }
+
+            <ExpensesChart expenses={filteredItems} />
+            <ExpensesList items={filteredItems} />
+            
+            { /* <ExpenseItem
             id={props.items[0].id}
             title={props.items[0].title}
             amount={props.items[0].amount}
@@ -45,7 +57,7 @@ function Expenses(props) {
             id={props.items[3].id}
             title={props.items[3].title}
             amount={props.items[3].amount}
-            date={props.items[3].date} />
+            date={props.items[3].date} /> */}
         </Card>
         </div>
     );
